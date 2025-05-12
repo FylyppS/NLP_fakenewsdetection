@@ -53,6 +53,11 @@ pip install torch --index-url https://download.pytorch.org/whl/cu121
    - FNC-1: https://github.com/FakeNewsChallenge/fnc-1
    - LIAR: https://www.cs.ucsb.edu/~william/data/liar_dataset.zip
 
+4. Uncomment lines in preprocessing.py when initially running:
+#nltk.download('punkt_tab')
+#nltk.download('stopwords')
+#nltk.download('wordnet')
+
 ## Usage
 
 ### Basic usage:
