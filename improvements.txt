@@ -1,3 +1,0 @@
-1. change liar form 2 vague to 6 detailed labels(?) -> transfer_learning() adaptation in improved_train_test_pipeline.py
-2. add f1, precision, recall plots after training both
-3. remove the options to train purely on liar or fnc1(?)
