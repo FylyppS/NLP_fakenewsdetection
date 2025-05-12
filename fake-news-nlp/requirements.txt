@@ -1,0 +1,10 @@
+transformers
+datasets
+torch --index-url https://download.pytorch.org/whl/cu121
+scikit-learn
+pandas
+numpy
+matplotlib
+seaborn
+tqdm
+nltk
