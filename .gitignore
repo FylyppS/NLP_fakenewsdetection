@@ -8,3 +8,8 @@
 /fake-news-nlp/models/__pycache__
 /fake-news-nlp/utils/__pycache__
 /fake-news-nlp/__pycache__
+.vscode/settings.json
+fake-news-nlp/saved_models/transfer_distilbert_best.pt
+.gitignore
+fake-news-nlp/figures/transfer_distilbert_confusion_matrix.png
+fake-news-nlp/saved_models/fnc1_distilbert_best.pt
