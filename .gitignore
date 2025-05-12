@@ -1,0 +1,7 @@
+﻿################################################################################
+# Ten plik .gitignore został utworzony automatycznie przez Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/fake-news-nlp/saved_models/fnc1_bert_best.pt
+/fake-news-nlp/saved_models/liar_distilbert_best.pt
