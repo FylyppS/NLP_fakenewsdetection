@@ -5,3 +5,6 @@
 /.vs
 /fake-news-nlp/saved_models/fnc1_bert_best.pt
 /fake-news-nlp/saved_models/liar_distilbert_best.pt
+/fake-news-nlp/models/__pycache__
+/fake-news-nlp/utils/__pycache__
+/fake-news-nlp/__pycache__

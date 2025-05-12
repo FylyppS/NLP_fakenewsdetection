@@ -46,6 +46,7 @@ cd fake-news-nlp
 2. Install required packages:
 ```bash
 pip install -r requirements.txt
+pip install torch --index-url https://download.pytorch.org/whl/cu121
 ```
 
 3. Download datasets:

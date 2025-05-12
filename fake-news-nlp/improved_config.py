@@ -23,11 +23,11 @@ class Config:
     DEFAULT_MODEL = "bert"
     
     # Sequence lengths
-    FNC1_MAX_LEN = 1024  # For article-headline pairs
+    FNC1_MAX_LEN = 512  # For article-headline pairs
     LIAR_MAX_LEN = 256  # Increased length for statements with context
     
     # Training
-    BATCH_SIZE = 32
+    BATCH_SIZE = 16
     EPOCHS = 10
     LEARNING_RATE = 3e-5
     WEIGHT_DECAY = 0.01
