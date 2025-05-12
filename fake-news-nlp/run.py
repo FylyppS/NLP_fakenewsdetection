@@ -35,8 +35,8 @@ if __name__ == "__main__":
     print("=" * 50)
     
     # Create directories for outputs
-    os.makedirs("fake-news-nlp/saved_models", exist_ok=True)
-    os.makedirs("fake-news-nlp/figures", exist_ok=True)
+    #os.makedirs("fake-news-nlp/saved_models", exist_ok=True)
+    #os.makedirs("fake-news-nlp/figures", exist_ok=True)
     
     # Run the pipeline
     run_pipeline()

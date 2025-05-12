@@ -112,19 +112,6 @@ python fake-news-nlp/run.py --model distilbert --dataset liar --sample_frac 0.1
    - Fine-tuning on binary classification (LIAR)
    - Layer-specific learning rates
 
-## Results
-
-The improved implementation achieves significantly better performance compared to the original:
-
-| Model       | Dataset | Original F1 | Improved F1 |
-|-------------|---------|-------------|-------------|
-| BERT        | FNC-1   | -           | -           |
-| BERT        | LIAR    | -           | -           |
-| DistilBERT  | FNC-1   | -           | -           |
-| DistilBERT  | LIAR    | -           | -           |
-| RoBERTa     | FNC-1   | -           | -           |
-| RoBERTa     | LIAR    | -           | -           |
-
 ## Acknowledgments
 
 - FNC-1 dataset: http://www.fakenewschallenge.org/
