@@ -76,6 +76,7 @@ python fake-news-nlp/run.py --model bert --dataset both
 - `--sample_frac`: Fraction of data to use (default: 1.0)
 - `--save_model`: Save model checkpoints
 - `--cross_val`: Perform cross-validation
+- `--weighted_loss`: Train model using weighted loss
 
 ### Examples:
 

@@ -25,6 +25,8 @@ if __name__ == "__main__":
                         help='Save the trained model')
     parser.add_argument('--cross_val', action='store_true', 
                         help='Perform cross-validation')
+    parser.add_argument('--weighted_loss', action='store_true', 
+                        help='Use class weighted loss function')
     
     args = parser.parse_args()
     
@@ -32,6 +34,7 @@ if __name__ == "__main__":
     print(f"Running experiment with model: {args.model}")
     print(f"Dataset: {args.dataset}")
     print(f"Sample fraction: {args.sample_frac}")
+    print(f"Using weighted loss: {args.weighted_loss}")
     print("=" * 50)
     
     # Create directories for outputs

@@ -13,3 +13,7 @@ fake-news-nlp/saved_models/transfer_distilbert_best.pt
 .gitignore
 fake-news-nlp/figures/transfer_distilbert_confusion_matrix.png
 fake-news-nlp/saved_models/fnc1_distilbert_best.pt
+fake-news-nlp/saved_models/transfer_distilbert_weighted_best.pt
+.gitignore
+fake-news-nlp/figures/transfer_weighted_distilbert_confusion_matrix.png
+fake-news-nlp/saved_models/fnc1_distilbert_weighted_best.pt
