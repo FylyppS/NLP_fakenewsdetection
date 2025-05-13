@@ -39,7 +39,7 @@ class Config:
     
     # Labels
     FNC1_LABELS = 4  # discuss, agree, disagree, unrelated
-    LIAR_LABELS = 6  # true, mostly-true, half-true, barely-true, false, pants-fire
+    LIAR_LABELS = 2  # true, mostly-true, half-true: 0 / barely-true, false, pants-fire: 1
     
     # Training options
     USE_ADVANCED_PREPROCESSING = True

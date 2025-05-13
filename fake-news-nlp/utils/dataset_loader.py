@@ -92,14 +92,10 @@ def load_liar_dataset(path="fake-news-nlp/data/liar/", split="train"):
         "mostly_true", "pants_on_fire", "context"
     ]
     
-    # Multi-class labels (0-5) - preserve original classes
+    # Binary labels (0=true, 1=false) - combine similar classes
     label_map = {
-        "true": 0, 
-        "mostly-true": 1, 
-        "half-true": 2,
-        "barely-true": 3, 
-        "false": 4, 
-        "pants-fire": 5
+        "true": 0, "mostly-true": 0, "half-true": 0,
+        "barely-true": 1, "false": 1, "pants-fire": 1
     }
     df["label"] = df["label"].map(label_map)
     

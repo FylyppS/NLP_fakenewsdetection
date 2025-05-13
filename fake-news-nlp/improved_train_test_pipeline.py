@@ -247,7 +247,7 @@ def train_liar(args, device):
     return trained_model, tokenizer
 
 def transfer_learning(fnc_model, args, device):
-    """Transfer knowledge from FNC-1 to LIAR dataset with multi-class support"""
+    """Transfer knowledge from FNC-1 to LIAR dataset"""
     print("\n==== Transfer Learning from FNC-1 to LIAR ====")
     
     # Load LIAR data
@@ -275,36 +275,11 @@ def transfer_learning(fnc_model, args, device):
     pretrained_dict = fnc_model.state_dict()
     model_dict = liar_model.state_dict()
     
-    # Filter out the classifier weights since dimensions won't match (4 classes vs 6 classes)
-    # This is the key change for multi-class support
-    transferred_dict = {}
-    for k, v in pretrained_dict.items():
-        # Only transfer non-classifier weights
-        if "classifier" not in k and k in model_dict:
-            transferred_dict[k] = v
-    
-    # Update the model with transferred weights
-    model_dict.update(transferred_dict)
+    # Keep only the weights that match between models
+    pretrained_dict = {k: v for k, v in pretrained_dict.items() 
+                      if k in model_dict and "classifier" not in k}
+    model_dict.update(pretrained_dict)
     liar_model.load_state_dict(model_dict)
-    
-    # Print classifier layer information for debugging - with model type handling
-    try:
-        # For models with different classifier structures
-        if hasattr(fnc_model.classifier, 'out_proj'):
-            print(f"FNC-1 output dimensions (out_proj): {fnc_model.classifier.out_proj.weight.shape}")
-            print(f"LIAR output dimensions (out_proj): {liar_model.classifier.out_proj.weight.shape}")
-        else:
-            # For models with direct linear classifier
-            print(f"FNC-1 output dimensions: {fnc_model.classifier.weight.shape}")
-            print(f"LIAR output dimensions: {liar_model.classifier.weight.shape}")
-    except AttributeError:
-        # Fallback for any other model structure
-        print("Model architectures differ - classifier structures don't match exactly")
-        print(f"FNC-1 model type: {type(fnc_model.classifier)}")
-        print(f"LIAR model type: {type(liar_model.classifier)}")
-    
-    print(f"Transferred {len(transferred_dict)}/{len(pretrained_dict)} layers")
-    
     liar_model.to(device)
     
     # Prepare datasets
@@ -335,22 +310,20 @@ def transfer_learning(fnc_model, args, device):
     test_loader = DataLoader(test_dataset, batch_size=args.batch_size)
     
     # Initialize optimizer with different learning rates for different layers
-    # Higher learning rate for the classifier (needs to learn from scratch)
+    # Lower learning rate for transferred layers
     param_optimizer = list(liar_model.named_parameters())
     no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
     
     # Different learning rates for different parts of the model
     optimizer_grouped_parameters = [
-        # Base model parameters with lower learning rate
         {'params': [p for n, p in param_optimizer if not any(nd in n for nd in no_decay) 
                     and 'classifier' not in n],
          'weight_decay': Config.WEIGHT_DECAY, 'lr': args.lr / 10.0},
         {'params': [p for n, p in param_optimizer if any(nd in n for nd in no_decay) 
                     and 'classifier' not in n],
          'weight_decay': 0.0, 'lr': args.lr / 10.0},
-        # Classifier parameters with higher learning rate (needs to learn from scratch)
         {'params': [p for n, p in param_optimizer if 'classifier' in n],
-         'weight_decay': Config.WEIGHT_DECAY, 'lr': args.lr * 3.0}  # Higher learning rate for classifier
+         'weight_decay': Config.WEIGHT_DECAY, 'lr': args.lr}
     ]
     
     optimizer = AdamW(optimizer_grouped_parameters)
@@ -396,7 +369,7 @@ def plot_confusion_matrix(metrics, dataset_name, model_name):
     """Plot and save confusion matrix from metrics"""
     try:
         # Create figures directory if it doesn't exist
-        os.makedirs("figures", exist_ok=True)
+        #os.makedirs("figures", exist_ok=True)
         
         # Extract metrics for plotting
         plt.figure(figsize=(10, 8))
