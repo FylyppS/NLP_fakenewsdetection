@@ -226,7 +226,7 @@ def train_fnc1_with_class_weights(args, device):
     model_save_path = os.path.join(Config.MODEL_SAVE_PATH, f"fnc1_{args.model}_weighted_best.pt")
     
     # Train the model z ważoną funkcją straty
-    trained_model = train_model_with_weighted_loss(
+    trained_model, training_history = train_model_with_weighted_loss(
         model, 
         train_loader, 
         val_loader, 
@@ -239,7 +239,7 @@ def train_fnc1_with_class_weights(args, device):
         model_save_path=model_save_path
     )
     
-    return trained_model, tokenizer
+    return trained_model, tokenizer, training_history
 
 def train_liar(args, device):
     """Train and evaluate on LIAR dataset"""
@@ -414,7 +414,7 @@ def train_liar_with_class_weights(args, device):
     model_save_path = os.path.join(Config.MODEL_SAVE_PATH, f"liar_{args.model}_weighted_best.pt")
     
     # Train the model z ważoną funkcją straty
-    trained_model = train_model_with_weighted_loss(
+    trained_model, training_history = train_model_with_weighted_loss(
         model, 
         train_loader, 
         val_loader, 
@@ -435,7 +435,7 @@ def train_liar_with_class_weights(args, device):
     # Plot confusion matrix
     plot_confusion_matrix(test_metrics, "liar_weighted", args.model)
     
-    return trained_model, tokenizer
+    return trained_model, tokenizer, training_history
 
 def transfer_learning(fnc_model, args, device):
     """Transfer knowledge from FNC-1 to LIAR dataset"""
@@ -720,7 +720,7 @@ def main():
     # Train on selected dataset(s)
     if args.dataset in ['fnc1', 'both']:
         if args.weighted_loss:
-            fnc_model, tokenizer = train_fnc1_with_class_weights(args, device)
+            fnc_model, tokenizer, training_history = train_fnc1_with_class_weights(args, device)
         else:
             fnc_model, tokenizer = train_fnc1(args, device)
         
@@ -733,7 +733,7 @@ def main():
     
     if args.dataset == 'liar':
         if args.weighted_loss:
-            liar_model, tokenizer = train_liar_with_class_weights(args, device)
+            liar_model, tokenizer, training_history = train_liar_with_class_weights(args, device)
         else:
             liar_model, tokenizer = train_liar(args, device)
     

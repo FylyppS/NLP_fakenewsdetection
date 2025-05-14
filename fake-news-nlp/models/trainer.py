@@ -9,6 +9,8 @@ from transformers import get_linear_schedule_with_warmup
 import torch.nn as nn
 import torch.nn.functional as F
 from typing import Dict, Optional
+import matplotlib.pyplot as plt
+import os
 
 transformers.logging.set_verbosity_error()
 
@@ -141,6 +143,16 @@ def train_model_with_weighted_loss(
     best_val_f1 = 0
     patience_counter = 0
     
+    # Initialize metrics tracking dictionaries
+    training_history = {
+        'loss': [],
+        'val_loss': [],
+        'precision': [],
+        'recall': [],
+        'f1': [],
+        'roc_auc': []
+    }
+    
     for epoch in range(epochs):
         model.train()
         total_loss = 0
@@ -177,10 +189,34 @@ def train_model_with_weighted_loss(
         # Validation
         avg_loss = total_loss / len(train_loader)
         print(f"\nTrain Loss: {avg_loss:.4f}")
+        training_history['loss'].append(avg_loss)
         
         # Tutaj używamy standardowej funkcji evaluate_model
-        from models.trainer import evaluate_model
         val_metrics = evaluate_model(model, val_loader, device, "Validation")
+        
+        # Store metrics in history
+        training_history['precision'].append(val_metrics['weighted avg']['precision'])
+        training_history['recall'].append(val_metrics['weighted avg']['recall'])
+        training_history['f1'].append(val_metrics['weighted avg']['f1-score'])
+        
+        # Calculate and store ROC AUC if possible (for binary classification)
+        # For multiclass, we'll use macro average ROC AUC
+        try:
+            from sklearn.metrics import roc_auc_score
+            # Get predictions and probabilities for ROC AUC calculation
+            y_true, y_prob = get_predictions_with_probs(model, val_loader, device)
+            
+            # For multiclass, use 'macro' average
+            if len(np.unique(y_true)) > 2:
+                roc_auc = roc_auc_score(y_true, y_prob, multi_class='ovr', average='macro')
+            else:  # Binary classification
+                roc_auc = roc_auc_score(y_true, y_prob[:, 1])  # Use probability of positive class
+                
+            training_history['roc_auc'].append(roc_auc)
+            print(f"Validation ROC AUC: {roc_auc:.4f}")
+        except Exception as e:
+            print(f"Could not calculate ROC AUC: {e}")
+            training_history['roc_auc'].append(None)
         
         # Early stopping based on F1 score
         val_f1 = val_metrics['weighted avg']['f1-score']
@@ -200,9 +236,12 @@ def train_model_with_weighted_loss(
                 print(f"Early stopping triggered after {epoch+1} epochs")
                 break
     
+    # Plot training metrics
+    plot_training_metrics(training_history, model_save_path.replace('.pt', '_metrics'))
+    
     # Load the best model for evaluation
     model.load_state_dict(torch.load(model_save_path))
-    return model
+    return model, training_history
 
 def evaluate_model(model, dataloader, device, prefix="Evaluation"):
     """Evaluation with classification report"""
@@ -222,3 +261,65 @@ def evaluate_model(model, dataloader, device, prefix="Evaluation"):
     print(classification_report(true_labels, predictions, digits=4))
     
     return report
+
+def get_predictions_with_probs(model, dataloader, device):
+    """Get model predictions and probabilities for ROC AUC calculation"""
+    model.eval()
+    all_probs = []
+    all_labels = []
+    
+    with torch.no_grad():
+        for batch in dataloader:
+            batch = {k: v.to(device) for k, v in batch.items()}
+            labels = batch["labels"]
+            outputs = model(**batch)
+            probs = F.softmax(outputs.logits, dim=1)
+            
+            all_probs.append(probs.cpu().numpy())
+            all_labels.append(labels.cpu().numpy())
+    
+    return np.concatenate(all_labels), np.concatenate(all_probs)
+
+def plot_training_metrics(history, save_path_prefix):
+    """Plot and save training metrics over epochs"""
+    # Create figures directory if it doesn't exist
+    os.makedirs('figures', exist_ok=True)
+    
+    metrics = ['precision', 'recall', 'f1']
+    plt.figure(figsize=(15, 10))
+    
+    # Plot precision, recall, f1
+    plt.subplot(2, 2, 1)
+    for metric in metrics:
+        if history[metric]:  # Check if we have this metric
+            plt.plot(history[metric], label=metric)
+    plt.xlabel('Epochs')
+    plt.ylabel('Score')
+    plt.title('Training Metrics')
+    plt.legend()
+    plt.grid(True)
+    
+    # Plot loss
+    plt.subplot(2, 2, 2)
+    plt.plot(history['loss'], label='train_loss')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.title('Training Loss')
+    plt.legend()
+    plt.grid(True)
+    
+    # Plot ROC AUC if available
+    if any(x is not None for x in history['roc_auc']):
+        plt.subplot(2, 2, 3)
+        plt.plot(history['roc_auc'], label='ROC AUC')
+        plt.xlabel('Epochs')
+        plt.ylabel('Score')
+        plt.title('ROC AUC')
+        plt.legend()
+        plt.grid(True)
+    
+    plt.tight_layout()
+    plt.savefig(f"{save_path_prefix}_training_plots.png")
+    plt.close()
+    
+    print(f"Training metrics plots saved to {save_path_prefix}_training_plots.png")

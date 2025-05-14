@@ -17,3 +17,5 @@ fake-news-nlp/saved_models/transfer_distilbert_weighted_best.pt
 .gitignore
 fake-news-nlp/figures/transfer_weighted_distilbert_confusion_matrix.png
 fake-news-nlp/saved_models/fnc1_distilbert_weighted_best.pt
+fake-news-nlp/figures/fnc1_distilbert_weighted_best_metrics_training_plots.png
+fake-news-nlp/figures/transfer_distilbert_weighted_best_metrics_training_plots.png
