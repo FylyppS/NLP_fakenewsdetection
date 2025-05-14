@@ -19,3 +19,8 @@ fake-news-nlp/figures/transfer_weighted_distilbert_confusion_matrix.png
 fake-news-nlp/saved_models/fnc1_distilbert_weighted_best.pt
 fake-news-nlp/figures/fnc1_distilbert_weighted_best_metrics_training_plots.png
 fake-news-nlp/figures/transfer_distilbert_weighted_best_metrics_training_plots.png
+/fake-news-detection-webapp/application/models/__pycache__
+/fake-news-detection-webapp/application/routes/__pycache__
+/fake-news-detection-webapp/application/services/__pycache__
+/fake-news-detection-webapp/application/__pycache__
+/fake-news-detection-webapp/__pycache__

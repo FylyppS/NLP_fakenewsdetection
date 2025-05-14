@@ -35,10 +35,9 @@ API_V1_PREFIX = "/api/v1"
 
 # Labels (keep consistent with your trained model)
 LABEL_MAPPING = {
-    0: "agree",
-    1: "disagree",
-    2: "discuss",
-    3: "unrelated"
+    0: "true",
+    1: "false",
+    2: "unsure",
 }
 
 # Web app configuration

@@ -131,7 +131,7 @@
                 displayResults({
                     original_text: "This is a sample article text that would be analyzed.",
                     predicted_class: 1,
-                    predicted_label: "disagree",
+                    predicted_label: "false",
                     confidence: 0.85,
                     keywords: ["sample", "article", "analyzed", "text", "news"],
                     statistics: {
@@ -153,10 +153,12 @@
                 resultElement.textContent = data.predicted_label.toUpperCase();
                 
                 // Set appropriate color based on prediction
-                if (data.predicted_label === 'agree') {
+                if (data.predicted_label === 'true') {
                     resultElement.className = 'mb-3 text-success';
-                } else if (data.predicted_label === 'disagree') {
+                } else if (data.predicted_label === "false") {
                     resultElement.className = 'mb-3 text-danger';
+                } else if (data.predicted_label === 'unsure') {
+                    resultElement.className = 'mb-3 text-primary';
                 } else {
                     resultElement.className = 'mb-3 text-warning';
                 }

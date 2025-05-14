@@ -92,11 +92,11 @@ document.addEventListener('DOMContentLoaded', function() {
         resultElement.textContent = data.prediction.predicted_label.toUpperCase();
         
         // Set appropriate color based on prediction
-        if (data.prediction.predicted_label === 'agree') {
+        if (data.prediction.predicted_label === 'true') {
             resultElement.className = 'mb-3 text-success';
-        } else if (data.prediction.predicted_label === 'disagree') {
+        } else if (data.prediction.predicted_label === 'false') {
             resultElement.className = 'mb-3 text-danger';
-        } else if (data.prediction.predicted_label === 'discuss') {
+        } else if (data.prediction.predicted_label === 'unsure') {
             resultElement.className = 'mb-3 text-primary';
         } else {
             resultElement.className = 'mb-3 text-warning';
