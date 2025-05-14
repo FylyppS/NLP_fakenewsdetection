@@ -237,7 +237,9 @@ def train_model_with_weighted_loss(
                 break
     
     # Plot training metrics
-    plot_training_metrics(training_history, model_save_path.replace('.pt', '_metrics'))
+    model_name = os.path.basename(model_save_path).replace('.pt', '')
+    figures_path = f"fake-news-nlp/figures/{model_name}"
+    plot_training_metrics(training_history, figures_path)
     
     # Load the best model for evaluation
     model.load_state_dict(torch.load(model_save_path))
