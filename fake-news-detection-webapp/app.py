@@ -1,28 +1,20 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from pydantic import BaseModel
-import torch
-from transformers import BertTokenizer, BertForSequenceClassification
 
-# Load your model and tokenizer
-model_path = "fake-news-nlp/models/bert_model.py"  # Update with your model path
-tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
-model = BertForSequenceClassification.from_pretrained(model_path)
-model.eval()  # Set the model to evaluation mode
+# Note: We don't need to initialize the model here since we're using ModelService
+# The actual model loading happens in application/services/model_service.py
+# and is initialized at startup in application/main.py
 
 app = FastAPI()
 
 class Message(BaseModel):
     text: str
+    url: str = None
 
-@app.post("/classify/")
-async def classify_message(message: Message):
-    inputs = tokenizer(message.text, return_tensors="pt", truncation=True, padding=True)
-    with torch.no_grad():
-        outputs = model(**inputs)
-    logits = outputs.logits
-    predicted_class = torch.argmax(logits, dim=1).item()
-    return {"predicted_class": predicted_class}
+# We don't need this endpoint because it's already defined in application/routes/api.py
+# and is included in the main app via app.include_router(api.router, prefix=config.API_V1_PREFIX)
 
+# Import the main application
 from application.main import app
 
 if __name__ == "__main__":

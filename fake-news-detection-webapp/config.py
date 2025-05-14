@@ -2,12 +2,12 @@ import os
 from pathlib import Path
 
 # Base paths
-BASE_DIR = "fake-news-nlp/saved_models/"
-MODEL_DIR = os.path.join(BASE_DIR, "models")
+BASE_DIR = "fake-news-nlp/saved_models/"  # This is likely correct
+MODEL_DIR = BASE_DIR  # Change this to remove the extra 'models' directory
 
 # Model configuration
-DEFAULT_MODEL = "bert"  # Options: bert, distilbert, roberta
-MODEL_PATH = os.path.join(MODEL_DIR, "fnc1_bert_weighted_best.pt")  # Update with your model path
+DEFAULT_MODEL = "distilbert"  # Options: bert, distilbert, roberta
+MODEL_PATH = os.path.join(MODEL_DIR, "transfer_bert_weighted_best.pt")  # Update with your model path
 TOKENIZER_PATH = "bert-base-uncased"  # Default tokenizer
 MAX_LENGTH = 512  # Maximum sequence length
 
@@ -16,17 +16,17 @@ MODELS = {
     "bert": {
         "name": "bert-base-uncased",
         "type": "bert",
-        "path": os.path.join(MODEL_DIR, "fnc1_bert_weighted_best.pt"),
+        "path": os.path.join(MODEL_DIR, "transfer_bert_weighted_best.pt"),
     },
     "distilbert": {
         "name": "distilbert-base-uncased",
         "type": "distilbert",
-        "path": os.path.join(MODEL_DIR, "fnc1_distilbert_weighted_best.pt"),
+        "path": os.path.join(MODEL_DIR, "transfer_distilbert_weighted_best.pt"),
     },
     "roberta": {
         "name": "roberta-base",
         "type": "roberta",
-        "path": os.path.join(MODEL_DIR, "fnc1_roberta_weighted_best.pt"),
+        "path": os.path.join(MODEL_DIR, "transfer_roberta_weighted_best.pt"),
     }
 }
 
