@@ -285,7 +285,7 @@ def get_predictions_with_probs(model, dataloader, device):
 def plot_training_metrics(history, save_path_prefix):
     """Plot and save training metrics over epochs"""
     # Create figures directory if it doesn't exist
-    os.makedirs('figures', exist_ok=True)
+    #os.makedirs('figures', exist_ok=True)
     
     metrics = ['precision', 'recall', 'f1']
     plt.figure(figsize=(15, 10))
